@@ -4,210 +4,201 @@
  * Copyright (C) 2026 Rémi SIMAER <rsimaer@gmail.com>
  */
 
+#include <dirent.h>
+#include <mecab.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
-#include <dirent.h>
 #include <sys/stat.h>
-#include <mecab.h>
+#include <wchar.h>
 
-#include "utils.h"
-#include "types.h"
-#include "srt.h"
 #include "ass.h"
+#include "srt.h"
+#include "types.h"
+#include "utils.h"
 
-static struct font_config default_cfg = {
-	.font_name = "Osaka-Mono",
-	.main_size = 62,
-	.furigana_size = 31,
-	.screen_w = 1920,
-	.screen_h = 1080,
-	.baseline_y = 800,
-	.furigana_offset = 58,
-	.char_width = 62.0f,
-	.line_spacing = 124
-};
+static struct font_config default_cfg = {.font_name = "MS Gothic",
+                                         .main_size = 62,
+                                         .furigana_size = 31,
+                                         .screen_w = 1920,
+                                         .screen_h = 1080,
+                                         .baseline_y = 800,
+                                         .furigana_offset = 58,
+                                         .char_width = 62.0f,
+                                         .line_spacing = 124};
 
-struct font_config *get_default_config(void)
-{
-	char *env_font = getenv("FONT_NAME");
-	if (env_font && strlen(env_font) > 0) {
-		default_cfg.font_name = env_font;
-	}
-	return &default_cfg;
+struct font_config *get_default_config(void) {
+  char *env_font = getenv("FONT_NAME");
+  if (env_font && strlen(env_font) > 0) {
+    default_cfg.font_name = env_font;
+  }
+  return &default_cfg;
 }
 
-struct font_config *create_scaled_config(int main_size)
-{
-	static struct font_config scaled_cfg;
-	const int base_size = 52;
-	float scale = (float)main_size / base_size;
-	int fixed_margin = 230;
+struct font_config *create_scaled_config(int main_size) {
+  static struct font_config scaled_cfg;
+  const int base_size = 52;
+  float scale = (float)main_size / base_size;
+  int fixed_margin = 230;
 
-	scaled_cfg.font_name = default_cfg.font_name;
-	scaled_cfg.main_size = main_size;
-	scaled_cfg.furigana_size = (int)(26 * scale + 0.5f);
-	scaled_cfg.screen_w = default_cfg.screen_w;
-	scaled_cfg.screen_h = default_cfg.screen_h;
-	scaled_cfg.baseline_y = default_cfg.screen_h - fixed_margin - main_size;
-	scaled_cfg.furigana_offset = (int)(48 * scale + 0.5f);
-	scaled_cfg.char_width = main_size;
-	scaled_cfg.line_spacing = (int)(104 * scale + 0.5f);
+  scaled_cfg.font_name = default_cfg.font_name;
+  scaled_cfg.main_size = main_size;
+  scaled_cfg.furigana_size = (int)(26 * scale + 0.5f);
+  scaled_cfg.screen_w = default_cfg.screen_w;
+  scaled_cfg.screen_h = default_cfg.screen_h;
+  scaled_cfg.baseline_y = default_cfg.screen_h - fixed_margin - main_size;
+  scaled_cfg.furigana_offset = (int)(48 * scale + 0.5f);
+  scaled_cfg.char_width = main_size;
+  scaled_cfg.line_spacing = (int)(104 * scale + 0.5f);
 
-	return &scaled_cfg;
+  return &scaled_cfg;
 }
 
-void print_banner(void)
-{
-	printf("\n");
-	printf("     ┏━╸╻ ╻┏━┓╻┏━╸┏━┓┏┓╻┏━┓   ╻ ╻   ┏━┓╻ ╻┏┓ ╺┳╸╻╺┳╸╻  ┏━╸┏━┓\n");
-	printf("     ┣╸ ┃ ┃┣┳┛┃┃╺┓┣━┫┃┗┫┣━┫   ┗━┫   ┗━┓┃ ┃┣┻┓ ┃ ┃ ┃ ┃  ┣╸ ┗━┓\n");
-	printf("     ╹  ┗━┛╹┗╸╹┗━┛╹ ╹╹ ╹╹ ╹     ╹   ┗━┛┗━┛┗━┛ ╹ ╹ ╹ ┗━╸┗━╸┗━┛\n");
-	printf("\n");
-	printf("  Kanji blocking your anime night? This kitty brings furigana~ ♪\n");
-	printf("     漢字が読めなくて困ってる？この子猫がふりがなを届けるよ～♪\n");
-	printf("\n");
-	printf("                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀\n");
-	printf("                    ⠀⠀⠀⠀⢀⡴⣆⠀⠀⠀⠀⠀⣠⡀⠀⠀⠀⠀⠀⠀⣼⣿⡗⠀⠀⠀⠀\n");
-	printf("                    ⠀⠀⠀⣠⠟⠀⠘⠷⠶⠶⠶⠾⠉⢳⡄⠀⠀⠀⠀⠀⣧⣿⠀⠀⠀⠀⠀\n");
-	printf("                    ⠀⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣤⣤⣤⣤⣤⣿⢿⣄⠀⠀⠀⠀\n");
-	printf("                    ⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠙⣷⡴⠶⣦\n");
-	printf("                    ⠀⠀⢱⡀⠀⠉⠉⠀⠀⠀⠀⠛⠃⠀⢠⡟⠀⠀⠀⢀⣀⣠⣤⠿⠞⠛⠋\n");
-	printf("                    ⣠⠾⠋⠙⣶⣤⣤⣤⣤⣤⣀⣠⣤⣾⣿⠴⠶⠚⠋⠉⠁⠀⠀⠀⠀⠀⠀\n");
-	printf("                    ⠛⠒⠛⠉⠉⠀⠀⠀⣴⠟⢃⡴⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-	printf("                    ⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-	printf("\n");
-	printf("                      (^_^) Version 1.1.0 (^_^)\n");
-	printf("\n");
-	printf("  ════════════════════════════════════════════════════════════════\n");
-	printf("\n");
-	printf("  * Find this useful? Buy me a coffee!\n");
-	printf("    https://www.paypal.com/donate/?hosted_button_id=2ZYLTYB2R9XGC\n");
-	printf("\n");
-	printf("  * Want to contribute?\n");
-	printf("    https://github.com/remisimaer/furigana4subtitles\n");
-	printf("\n");
-	printf("  * 開発者を探している採用担当者の方は、ぜひご連絡ください。\n");
-	printf("    https://www.remisimaer.com\n");
-	printf("\n");
-	printf("  ════════════════════════════════════════════════════════════════\n");
-	printf("\n");
+void print_banner(void) {
+  printf("\n");
+  printf("     ┏━╸╻ ╻┏━┓╻┏━╸┏━┓┏┓╻┏━┓   ╻ ╻   ┏━┓╻ ╻┏┓ ╺┳╸╻╺┳╸╻  ┏━╸┏━┓\n");
+  printf("     ┣╸ ┃ ┃┣┳┛┃┃╺┓┣━┫┃┗┫┣━┫   ┗━┫   ┗━┓┃ ┃┣┻┓ ┃ ┃ ┃ ┃  ┣╸ ┗━┓\n");
+  printf("     ╹  ┗━┛╹┗╸╹┗━┛╹ ╹╹ ╹╹ ╹     ╹   ┗━┛┗━┛┗━┛ ╹ ╹ ╹ ┗━╸┗━╸┗━┛\n");
+  printf("\n");
+  printf("  Kanji blocking your anime night? This kitty brings furigana~ ♪\n");
+  printf("     漢字が読めなくて困ってる？この子猫がふりがなを届けるよ～♪\n");
+  printf("\n");
+  printf("                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀\n");
+  printf("                    ⠀⠀⠀⠀⢀⡴⣆⠀⠀⠀⠀⠀⣠⡀⠀⠀⠀⠀⠀⠀⣼⣿⡗⠀⠀⠀⠀\n");
+  printf("                    ⠀⠀⠀⣠⠟⠀⠘⠷⠶⠶⠶⠾⠉⢳⡄⠀⠀⠀⠀⠀⣧⣿⠀⠀⠀⠀⠀\n");
+  printf("                    ⠀⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣤⣤⣤⣤⣤⣿⢿⣄⠀⠀⠀⠀\n");
+  printf("                    ⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠙⣷⡴⠶⣦\n");
+  printf("                    ⠀⠀⢱⡀⠀⠉⠉⠀⠀⠀⠀⠛⠃⠀⢠⡟⠀⠀⠀⢀⣀⣠⣤⠿⠞⠛⠋\n");
+  printf("                    ⣠⠾⠋⠙⣶⣤⣤⣤⣤⣤⣀⣠⣤⣾⣿⠴⠶⠚⠋⠉⠁⠀⠀⠀⠀⠀⠀\n");
+  printf("                    ⠛⠒⠛⠉⠉⠀⠀⠀⣴⠟⢃⡴⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+  printf("                    ⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+  printf("\n");
+  printf("                      (^_^) Version 1.1.0 (^_^)\n");
+  printf("\n");
+  printf(
+      "  ════════════════════════════════════════════════════════════════\n");
+  printf("\n");
+  printf("  * Find this useful? Buy me a coffee!\n");
+  printf("    https://www.paypal.com/donate/?hosted_button_id=2ZYLTYB2R9XGC\n");
+  printf("\n");
+  printf("  * Want to contribute?\n");
+  printf("    https://github.com/remisimaer/furigana4subtitles\n");
+  printf("\n");
+  printf("  * 開発者を探している採用担当者の方は、ぜひご連絡ください。\n");
+  printf("    https://www.remisimaer.com\n");
+  printf("\n");
+  printf(
+      "  ════════════════════════════════════════════════════════════════\n");
+  printf("\n");
 }
 
-int count_unicode_chars(const char *s)
-{
-	mbstate_t st = {0};
-	int count = 0;
-	size_t len;
-	size_t i;
+int count_unicode_chars(const char *s) {
+  mbstate_t st = {0};
+  int count = 0;
+  size_t len;
+  size_t i;
 
-	if (!s)
-		return 0;
+  if (!s)
+    return 0;
 
-	len = strlen(s);
-	for (i = 0; i < len; ) {
-		wchar_t wc;
-		size_t n = mbrtowc(&wc, s + i, len - i, &st);
+  len = strlen(s);
+  for (i = 0; i < len;) {
+    wchar_t wc;
+    size_t n = mbrtowc(&wc, s + i, len - i, &st);
 
-		if (n == 0 || n == (size_t)-1 || n == (size_t)-2)
-			break;
-		count++;
-		i += n;
-	}
-	return count;
+    if (n == 0 || n == (size_t)-1 || n == (size_t)-2)
+      break;
+    count++;
+    i += n;
+  }
+  return count;
 }
 
-void format_ass_time(int ms, char *buf)
-{
-	int h, m, s, cs;
+void format_ass_time(int ms, char *buf) {
+  int h, m, s, cs;
 
-	h = ms / MS_PER_HOUR;
-	ms %= MS_PER_HOUR;
-	m = ms / MS_PER_MINUTE;
-	ms %= MS_PER_MINUTE;
-	s = ms / MS_PER_SECOND;
-	cs = (ms % MS_PER_SECOND) / 10;
+  h = ms / MS_PER_HOUR;
+  ms %= MS_PER_HOUR;
+  m = ms / MS_PER_MINUTE;
+  ms %= MS_PER_MINUTE;
+  s = ms / MS_PER_SECOND;
+  cs = (ms % MS_PER_SECOND) / 10;
 
-	snprintf(buf, MAX_TIME, "%d:%02d:%02d.%02d", h, m, s, cs);
+  snprintf(buf, MAX_TIME, "%d:%02d:%02d.%02d", h, m, s, cs);
 }
 
-int is_kanji(wchar_t c)
-{
-	/* CJK Unified Ideographs */
-	if (c >= 0x4E00 && c <= 0x9FAF)
-		return 1;
-	/* CJK Extension A */
-	if (c >= 0x3400 && c <= 0x4DBF)
-		return 1;
-	/* Ideographic iteration marks */
-	if (c >= 0x3005 && c <= 0x3007)
-		return 1;
-	return 0;
+int is_kanji(wchar_t c) {
+  /* CJK Unified Ideographs */
+  if (c >= 0x4E00 && c <= 0x9FAF)
+    return 1;
+  /* CJK Extension A */
+  if (c >= 0x3400 && c <= 0x4DBF)
+    return 1;
+  /* Ideographic iteration marks */
+  if (c >= 0x3005 && c <= 0x3007)
+    return 1;
+  return 0;
 }
 
-int ends_with_srt(const char *path)
-{
-	size_t len = strlen(path);
+int ends_with_srt(const char *path) {
+  size_t len = strlen(path);
 
-	if (len <= 4)
-		return 0;
-	return strcmp(path + len - 4, ".srt") == 0;
+  if (len <= 4)
+    return 0;
+  return strcmp(path + len - 4, ".srt") == 0;
 }
 
-void process_file(const char *path, struct font_config *cfg, mecab_t *mecab)
-{
-	struct subtitle *subs;
-	char outpath[JPSUB_MAX_PATH];
-	char *dot;
-	int count = 0;
-	int i;
+void process_file(const char *path, struct font_config *cfg, mecab_t *mecab) {
+  struct subtitle *subs;
+  char outpath[JPSUB_MAX_PATH];
+  char *dot;
+  int count = 0;
+  int i;
 
-	subs = parse_srt(path, &count);
-	if (!subs)
-		return;
+  subs = parse_srt(path, &count);
+  if (!subs)
+    return;
 
-	strncpy(outpath, path, sizeof(outpath) - 1);
-	outpath[sizeof(outpath) - 1] = '\0';
+  strncpy(outpath, path, sizeof(outpath) - 1);
+  outpath[sizeof(outpath) - 1] = '\0';
 
-	dot = strrchr(outpath, '.');
-	if (dot && strcmp(dot, ".srt") == 0)
-		*dot = '\0';
+  dot = strrchr(outpath, '.');
+  if (dot && strcmp(dot, ".srt") == 0)
+    *dot = '\0';
 
-	printf("Processing: %s (%d subtitles)\n", path, count);
-	generate_ass(outpath, subs, count, cfg, mecab);
+  printf("Processing: %s (%d subtitles)\n", path, count);
+  generate_ass(outpath, subs, count, cfg, mecab);
 
-	for (i = 0; i < count; i++)
-		free(subs[i].text);
-	free(subs);
+  for (i = 0; i < count; i++)
+    free(subs[i].text);
+  free(subs);
 }
 
-void scan_directory(const char *dir, struct font_config *cfg, mecab_t *mecab)
-{
-	DIR *d;
-	struct dirent *entry;
+void scan_directory(const char *dir, struct font_config *cfg, mecab_t *mecab) {
+  DIR *d;
+  struct dirent *entry;
 
-	d = opendir(dir);
-	if (!d)
-		return;
+  d = opendir(dir);
+  if (!d)
+    return;
 
-	while ((entry = readdir(d)) != NULL) {
-		char path[JPSUB_MAX_PATH];
-		struct stat st;
+  while ((entry = readdir(d)) != NULL) {
+    char path[JPSUB_MAX_PATH];
+    struct stat st;
 
-		if (entry->d_name[0] == '.')
-			continue;
+    if (entry->d_name[0] == '.')
+      continue;
 
-		snprintf(path, sizeof(path), "%s/%s", dir, entry->d_name);
+    snprintf(path, sizeof(path), "%s/%s", dir, entry->d_name);
 
-		if (stat(path, &st) != 0)
-			continue;
+    if (stat(path, &st) != 0)
+      continue;
 
-		if (S_ISDIR(st.st_mode))
-			scan_directory(path, cfg, mecab);
-		else if (ends_with_srt(path))
-			process_file(path, cfg, mecab);
-	}
+    if (S_ISDIR(st.st_mode))
+      scan_directory(path, cfg, mecab);
+    else if (ends_with_srt(path))
+      process_file(path, cfg, mecab);
+  }
 
-	closedir(d);
+  closedir(d);
 }
