@@ -66,6 +66,24 @@ docker run --rm -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/vi
 
 > ⚠️ **Lưu ý quan trọng khi dùng Docker:** Cả file phụ đề `.srt` và file video `.mp4` đầu vào phải nằm trong cùng thư mục (hoặc thư mục con) nơi bạn chạy lệnh Terminal để Docker có thể ánh xạ đúng dữ liệu.
 
+#### 3. Tùy chọn Font chữ khi chạy Docker (Osaka-Mono, MS Gothic, v.v.)
+Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn sử dụng các font khác (như **`MS Gothic`**):
+
+1. **Chuẩn bị font:** Bỏ file font bạn muốn dùng (ví dụ: `msgothic.ttc`) vào thư mục `fonts/` ở local (không cần và không nên commit file font này lên GitHub).
+2. **Build lại Docker Image:**
+   ```bash
+   docker build -t furigana4subtitles .
+   ```
+3. **Chạy Docker với biến môi trường `-e FONT_NAME`:**
+   * **Sử dụng font MS Gothic:**
+     ```bash
+     docker run --rm -e FONT_NAME="MS Gothic" -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+   * **Sử dụng font Osaka-Mono:**
+     ```bash
+     docker run --rm -e FONT_NAME="Osaka-Mono" -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+
 ---
 
 ## 🛠️ Hướng dẫn cài đặt & Biên dịch cục bộ (Không dùng Docker)

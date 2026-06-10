@@ -26,4 +26,10 @@ subs/
 # Windows
 Thumbs.db
 
+# Fonts
+*.ttf
+*.ttc
+*.otf
+
+
 
