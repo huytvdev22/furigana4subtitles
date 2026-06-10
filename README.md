@@ -40,28 +40,28 @@ Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount)
 #### Chế độ 1: Chỉ tạo file phụ đề `.ass` (không ghép vào video)
 * **macOS / Linux / Windows PowerShell:**
   ```bash
-  docker run --rm -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt
+  docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt
   ```
 * **Windows CMD:**
   ```cmd
-  docker run --rm -v "%cd%":/data furigana4subtitles /data/subtitle.srt
+  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt
   ```
 *(Kết quả file `subtitle.ass` sẽ được lưu cùng thư mục với file `.srt` gốc).*
 
 #### Chế độ 2: Tạo phụ đề và tự động Burn-in (Gắn cứng) vào video
 * **macOS / Linux / Windows PowerShell:**
   ```bash
-  docker run --rm -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+  docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 * **Windows CMD:**
   ```cmd
-  docker run --rm -v "%cd%":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 *(Kết quả file video hardsub `video_furigana.mp4` sẽ được tạo ra tại thư mục hiện tại của bạn).*
 
 #### Chế độ 3: Chỉ định rõ tên file video đầu ra mong muốn
 ```bash
-docker run --rm -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
+docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
 ```
 
 > ⚠️ **Lưu ý quan trọng khi dùng Docker:** Cả file phụ đề `.srt` và file video `.mp4` đầu vào phải nằm trong cùng thư mục (hoặc thư mục con) nơi bạn chạy lệnh Terminal để Docker có thể ánh xạ đúng dữ liệu.
@@ -77,11 +77,11 @@ Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn 
 3. **Chạy Docker với biến môi trường `-e FONT_NAME`:**
    * **Sử dụng font MS Gothic:**
      ```bash
-     docker run --rm -e FONT_NAME="MS Gothic" -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+     docker run --rm -e FONT_NAME="MS Gothic" -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
      ```
    * **Sử dụng font Osaka-Mono:**
      ```bash
-     docker run --rm -e FONT_NAME="Osaka-Mono" -v "$(pwd)":/data furigana4subtitles /data/subtitle.srt /data/video.mp4
+     docker run --rm -e FONT_NAME="Osaka-Mono" -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
      ```
 
 ---
