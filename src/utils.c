@@ -31,6 +31,10 @@ static struct font_config default_cfg = {
 
 struct font_config *get_default_config(void)
 {
+	char *env_font = getenv("FONT_NAME");
+	if (env_font && strlen(env_font) > 0) {
+		default_cfg.font_name = env_font;
+	}
 	return &default_cfg;
 }
 

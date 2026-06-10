@@ -21,9 +21,9 @@ ENV LANG ja_JP.UTF-8
 ENV LANGUAGE ja_JP:ja
 ENV LC_ALL ja_JP.UTF-8
 
-# Tạo thư mục font và sao chép font OsakaMono.ttf từ thư mục local
-RUN mkdir -p /usr/share/fonts/truetype/osaka
-COPY fonts/OsakaMono.ttf /usr/share/fonts/truetype/osaka/OsakaMono.ttf
+# Tạo thư mục font và sao chép toàn bộ font từ thư mục fonts local
+RUN mkdir -p /usr/share/fonts/truetype/custom
+COPY fonts/ /usr/share/fonts/truetype/custom/
 RUN fc-cache -f -v
 
 WORKDIR /app
