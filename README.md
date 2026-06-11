@@ -44,7 +44,7 @@ Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount)
   ```
 * **Windows CMD:**
   ```cmd
-  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt
+  docker run --rm -v "${PWD}:/data" huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 *(Kết quả file `subtitle.ass` sẽ được lưu cùng thư mục với file `.srt` gốc).*
 
