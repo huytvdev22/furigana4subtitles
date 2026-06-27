@@ -14,7 +14,7 @@
 
   // Tránh chạy trùng lặp khi script bị chèn nhiều lần trên Blogger
   if (window.__FuriganaBloggerLoaded) {
-    console.log('[Furigana] Thư viện đã được tải trước đó. Bỏ qua chạy lại.');
+    console.log('[Furigana] Library already loaded. Skipping duplicate execution.');
     return;
   }
   window.__FuriganaBloggerLoaded = true;
@@ -86,7 +86,7 @@
       '<div class="furigana-loading" id="furigana-loading">' +
         '<div class="furigana-spinner"></div>' +
         '<div class="furigana-loading-text">' +
-          '<strong>ふりがな</strong> — Đang tải bộ phân tích tiếng Nhật...' +
+          '<strong>ふりがな</strong> — Loading Japanese analyzer...' +
         '</div>' +
       '</div>'
     );
@@ -104,13 +104,13 @@
   function createControlsUI() {
     return createElement(
       '<div class="furigana-controls" id="furigana-controls" style="display:none;">' +
-        '<button class="furigana-toggle-btn" id="furigana-toggle" data-state="on" title="Bật/tắt hiển thị furigana">' +
+        '<button class="furigana-toggle-btn" id="furigana-toggle" data-state="on" title="Toggle furigana display">' +
           '<span class="furigana-toggle-icon">あ</span>' +
           '<span class="furigana-toggle-label">' + config.toggleLabelOn + '</span>' +
         '</button>' +
         '<span class="furigana-status" id="furigana-status">' +
           '<span class="furigana-status-dot"></span>' +
-          '<span id="furigana-status-text">Đã thêm furigana</span>' +
+          '<span id="furigana-status-text">Furigana added</span>' +
         '</span>' +
       '</div>'
     );
@@ -206,7 +206,7 @@
       '      importScripts(data.kuroshiroUrl);',
       '      importScripts(data.analyzerUrl);',
       '    } catch (err) {',
-      '      self.postMessage({ type: "init_error", error: "Không thể tải thư viện từ CDN: " + err.message });',
+      '      self.postMessage({ type: "init_error", error: "Failed to load library from CDN: " + err.message });',
       '      return;',
       '    }',
       '',
@@ -214,7 +214,7 @@
       '    var AnalyzerClass = resolveConstructor(self.KuromojiAnalyzer || KuromojiAnalyzer);',
       '',
       '    if (!KuroshiroClass || !AnalyzerClass) {',
-      '      self.postMessage({ type: "init_error", error: "Không tìm thấy Kuroshiro/KuromojiAnalyzer constructor." });',
+      '      self.postMessage({ type: "init_error", error: "Kuroshiro/KuromojiAnalyzer constructor not found." });',
       '      return;',
       '    }',
       '',
@@ -225,13 +225,13 @@
       '        self.postMessage({ type: "init_done" });',
       '      })',
       '      .catch(function(err) {',
-      '        self.postMessage({ type: "init_error", error: "Lỗi khởi tạo từ điển: " + err.message });',
+      '        self.postMessage({ type: "init_error", error: "Dictionary initialization failed: " + err.message });',
       '      });',
       '  }',
       '',
       '  if (data.type === "convert") {',
       '    if (!initialized || !kuroshiro) {',
-      '      self.postMessage({ type: "convert_result", id: data.id, error: "Chưa khởi tạo xong." });',
+      '      self.postMessage({ type: "convert_result", id: data.id, error: "Not initialized yet." });',
       '      return;',
       '    }',
       '    kuroshiro.convert(data.text, { to: "hiragana", mode: "furigana" })',
@@ -267,8 +267,8 @@
 
       var timeoutId = setTimeout(function () {
         reject(new Error(
-          'Quá thời gian khởi tạo (' + (config.initTimeout / 1000) + 's). ' +
-          'Kiểm tra kết nối mạng hoặc tắt Adblock rồi tải lại trang.'
+          'Initialization timed out (' + (config.initTimeout / 1000) + 's). ' +
+          'Please check your network connection or disable Adblock, then reload the page.'
         ));
       }, config.initTimeout);
 
@@ -301,7 +301,7 @@
 
       worker.onerror = function (e) {
         clearTimeout(timeoutId);
-        reject(new Error('Worker lỗi: ' + (e.message || 'Unknown error')));
+        reject(new Error('Worker error: ' + (e.message || 'Unknown error')));
       };
 
       // Gửi lệnh init tới Worker, kèm theo URLs và dictPath
@@ -344,7 +344,7 @@
         return true;
       })
       .catch(function (err) {
-        console.warn('[Furigana] Lỗi khi xử lý element:', err, element);
+        console.warn('[Furigana] Error processing element:', err, element);
         return false;
       });
   }
@@ -354,11 +354,11 @@
     var totalCount = elements.length;
 
     if (totalCount === 0) {
-      updateLoadingText('Không tìm thấy nội dung tiếng Nhật để xử lý.');
+      updateLoadingText('No Japanese content found to process.');
       return Promise.resolve(0);
     }
 
-    updateLoadingText('Đang thêm furigana cho ' + totalCount + ' đoạn văn...');
+    updateLoadingText('Adding furigana to ' + totalCount + ' paragraphs...');
 
     var successCount = 0;
     var processedCount = 0;
@@ -372,7 +372,7 @@
             if (success) successCount++;
             processedCount++;
             if (processedCount % 5 === 0 || processedCount === totalCount) {
-              updateLoadingText('Đang xử lý... ' + processedCount + '/' + totalCount + ' đoạn văn');
+              updateLoadingText('Processing... ' + processedCount + '/' + totalCount + ' paragraphs');
             }
           });
         });
@@ -382,7 +382,7 @@
     return chain.then(function () {
       var statusText = document.getElementById('furigana-status-text');
       if (statusText) {
-        statusText.textContent = 'Đã thêm furigana cho ' + successCount + '/' + totalCount + ' đoạn';
+        statusText.textContent = 'Furigana added to ' + successCount + '/' + totalCount + ' paragraphs';
       }
       return successCount;
     });
@@ -410,12 +410,12 @@
       }
     }
 
-    updateLoadingText('Đang khởi tạo bộ phân tích hình thái (Web Worker)...');
+    updateLoadingText('Initializing morphological analyzer (Web Worker)...');
 
     // Khởi tạo Worker (tất cả xử lý nặng chạy trên luồng nền)
     initWorker()
       .then(function () {
-        updateLoadingText('Bộ phân tích sẵn sàng! Đang xử lý văn bản...');
+        updateLoadingText('Analyzer ready! Processing text...');
         return processAllElements();
       })
       .then(function (successCount) {
@@ -440,11 +440,11 @@
           config.onComplete(successCount, totalCount);
         }
 
-        console.log('[Furigana] ✅ Hoàn thành! Đã xử lý ' + successCount + '/' + totalCount + ' đoạn văn.');
+        console.log('[Furigana] ✅ Done! Processed ' + successCount + '/' + totalCount + ' paragraphs.');
       })
       .catch(function (err) {
-        console.error('[Furigana] ❌ Lỗi:', err);
-        showError('Không thể tải furigana: ' + err.message + '. Vui lòng tải lại trang.');
+        console.error('[Furigana] ❌ Error:', err);
+        showError('Failed to load furigana: ' + err.message + '. Please reload the page.');
       });
   }
 
@@ -456,7 +456,7 @@
 
     reprocess: function () {
       if (!isInitialized) {
-        console.warn('[Furigana] Chưa khởi tạo. Hãy gọi init() trước.');
+        console.warn('[Furigana] Not initialized. Please call init() first.');
         return Promise.resolve(0);
       }
       var els = document.querySelectorAll('[data-furigana-processed]');
@@ -466,7 +466,7 @@
 
     processElement: function (element) {
       if (!isInitialized) {
-        console.warn('[Furigana] Chưa khởi tạo. Hãy gọi init() trước.');
+        console.warn('[Furigana] Not initialized. Please call init() first.');
         return Promise.resolve(false);
       }
       return processElement(element);
@@ -486,7 +486,7 @@
         try {
           userCfg = JSON.parse(scriptTag.getAttribute('data-furigana-config'));
         } catch (e) {
-          console.warn('[Furigana] Config không hợp lệ:', e);
+          console.warn('[Furigana] Invalid config:', e);
         }
       }
       init(userCfg);
