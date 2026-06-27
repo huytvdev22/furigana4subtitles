@@ -11,6 +11,13 @@
 (function () {
   'use strict';
 
+  // Tránh chạy trùng lặp khi script bị chèn nhiều lần trên Blogger (Ví dụ: ở cả theme và trong bài viết)
+  if (window.__FuriganaBloggerLoaded) {
+    console.log('[Furigana] Thư viện đã được tải trước đó. Bỏ qua chạy lại.');
+    return;
+  }
+  window.__FuriganaBloggerLoaded = true;
+
   /* ── Default Configuration ── */
   const DEFAULT_CONFIG = {
     // CSS selector cho các element chứa text tiếng Nhật cần thêm furigana
@@ -34,8 +41,8 @@
     // Tự động chạy khi DOM ready
     autoInit: true,
 
-    // Dict path cho Kuromoji (CDN)
-    dictPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict/',
+    // Dict path cho Kuromoji (Dùng UNPKG chạy qua Cloudflare để tăng tốc tại Việt Nam, tránh bị nghẽn như jsDelivr)
+    dictPath: 'https://unpkg.com/kuromoji@0.1.2/dict/',
 
     // Label cho nút toggle
     toggleLabelOn: 'ふりがな ON',

@@ -57,7 +57,7 @@ Thư viện tự động quét các `<p class="zh">` bên trong `.transcript-con
 | `showLoading` | `true` | Hiển thị loading indicator |
 | `autoInit` | `true` | Tự động chạy khi DOM ready |
 | `animateOnLoad` | `true` | Animation khi furigana xuất hiện |
-| `dictPath` | CDN jsDelivr | Đường dẫn dictionary Kuromoji |
+| `dictPath` | CDN UNPKG | Đường dẫn dictionary Kuromoji |
 | `toggleLabelOn` | `ふりがな ON` | Label nút khi furigana bật |
 | `toggleLabelOff` | `ふりがな OFF` | Label nút khi furigana tắt |
 
