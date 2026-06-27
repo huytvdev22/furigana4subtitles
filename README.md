@@ -64,7 +64,18 @@ Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount)
 docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
 ```
 
-> ⚠️ **Lưu ý quan trọng khi dùng Docker:** Cả file phụ đề `.srt` và file video `.mp4` đầu vào phải nằm trong cùng thư mục (hoặc thư mục con) nơi bạn chạy lệnh Terminal để Docker có thể ánh xạ đúng dữ liệu.
+#### Chế độ 4: Điều chỉnh tốc độ hàng loạt cho các file âm thanh trong thư mục hiện tại
+* **macOS / Linux / Windows PowerShell:**
+  ```bash
+  docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles speed <tốc_độ> [phần_mở_rộng]
+  ```
+* **Ví dụ làm chậm tất cả file `.mp3` xuống tốc độ `0.9`:**
+  ```bash
+  docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles speed 0.9 mp3
+  ```
+  *(Các file kết quả sẽ được tạo với hậu tố `_speed0.9.mp3` tại thư mục hiện tại).*
+
+> ⚠️ **Lưu ý quan trọng khi dùng Docker:** Cả file phụ đề `.srt`, file video `.mp4` hoặc các file âm thanh đầu vào phải nằm trong cùng thư mục (hoặc thư mục con) nơi bạn chạy lệnh Terminal để Docker có thể ánh xạ đúng dữ liệu.
 
 #### 3. Tùy chọn Font chữ khi chạy Docker (Osaka-Mono, MS Gothic, v.v.)
 Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn sử dụng các font khác (như **`MS Gothic`**):
