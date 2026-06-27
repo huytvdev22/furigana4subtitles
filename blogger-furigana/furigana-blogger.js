@@ -285,11 +285,27 @@
 
     kuroshiroInstance = new KuroshiroClass();
 
-    await kuroshiroInstance.init(
+    // Tạo Promise timeout 15 giây để tránh treo vô hạn nếu mạng lỗi/adblocker chặn
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(
+        () =>
+          reject(
+            new Error(
+              'Quá thời gian tải bộ từ điển từ CDN (15s timeout). Có thể do kết nối mạng tới CDN (UNPKG) bị chặn/nghẽn hoặc do trình duyệt cài bộ chặn quảng cáo (Adblock).'
+            )
+          ),
+        15000
+      )
+    );
+
+    const initPromise = kuroshiroInstance.init(
       new AnalyzerClass({
         dictPath: config.dictPath,
       })
     );
+
+    // Chạy song song, nếu quá 15s chưa xong sẽ quăng lỗi để hiển thị
+    await Promise.race([initPromise, timeoutPromise]);
 
     isInitialized = true;
     return kuroshiroInstance;
