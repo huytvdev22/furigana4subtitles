@@ -1,8 +1,8 @@
-# Furigana for Blogger
+# Furigana for Blogger (v2.0 — Web Worker Edition)
 
 Thư viện JS/CSS nhẹ để tự động thêm **furigana** (ふりがな) cho chữ Kanji trong bài viết trên Blogger.
 
-Dựa trên logic phân tích hình thái tiếng Nhật của dự án [furigana4subtitles](https://github.com/remisimaer/furigana4subtitles), chuyển sang chạy hoàn toàn **client-side** trên trình duyệt.
+Dựa trên logic phân tích hình thái tiếng Nhật của dự án [furigana4subtitles](https://github.com/remisimaer/furigana4subtitles), chạy hoàn toàn **client-side** trên trình duyệt bằng **Web Worker** (không khóa giao diện).
 
 ---
 
@@ -16,15 +16,13 @@ Mở **Blogger Dashboard** → **Theme** → **Edit HTML**, thêm đoạn sau **
 <!-- Furigana for Blogger - CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR_GITHUB/furigana4subtitles@main/blogger-furigana/furigana-blogger.css" />
 
-<!-- Dependencies -->
-<script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
-
-<!-- Furigana for Blogger - JS -->
+<!-- Furigana for Blogger - JS (v2.0 Web Worker, chỉ cần 1 script duy nhất) -->
 <script src="https://cdn.jsdelivr.net/gh/YOUR_GITHUB/furigana4subtitles@main/blogger-furigana/furigana-blogger.js"></script>
 ```
 
 > ⚠️ Thay `YOUR_GITHUB` bằng username GitHub của bạn.
+> 
+> 💡 **v2.0**: Không cần thêm thẻ `<script>` cho Kuroshiro hay KuromojiAnalyzer nữa. Web Worker tự tải chúng nội bộ.
 
 ### 2. Cấu trúc HTML bài viết
 
