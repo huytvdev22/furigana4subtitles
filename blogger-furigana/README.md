@@ -14,7 +14,7 @@ Mở **Blogger Dashboard** → **Theme** → **Edit HTML**, thêm đoạn sau **
 
 ```html
 <!-- Furigana for Blogger - CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR_GITHUB/furigana4subtitles@main/blogger-furigana/furigana-blogger.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR_GITHUB/furigana4subtitles@main/blogger-furigana/furigana-blogger.css" />
 
 <!-- Dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
