@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <!-- Furigana Blogger CSS -->
   <link rel="stylesheet" href="furigana-blogger.css" />
@@ -46,13 +49,18 @@
       width: 200%;
       height: 200%;
       background: radial-gradient(ellipse at 30% 50%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
-                  radial-gradient(ellipse at 70% 50%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
+        radial-gradient(ellipse at 70% 50%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
       animation: heroGlow 8s ease-in-out infinite alternate;
     }
 
     @keyframes heroGlow {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(5deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(5deg);
+      }
     }
 
     .hero-content {
@@ -138,7 +146,7 @@
       padding: 0 32px 32px;
     }
 
-    .post-body > p {
+    .post-body>p {
       color: rgba(255, 255, 255, 0.7);
       line-height: 1.8;
       margin-bottom: 20px;
@@ -206,10 +214,21 @@
       white-space: pre;
     }
 
-    .code-block .tag { color: #e74c8b; }
-    .code-block .attr { color: #ffd166; }
-    .code-block .str { color: #a8d8ea; }
-    .code-block .cmt { color: rgba(255,255,255,0.3); }
+    .code-block .tag {
+      color: #e74c8b;
+    }
+
+    .code-block .attr {
+      color: #ffd166;
+    }
+
+    .code-block .str {
+      color: #a8d8ea;
+    }
+
+    .code-block .cmt {
+      color: rgba(255, 255, 255, 0.3);
+    }
 
     /* ── Footer ── */
     .footer {
@@ -233,22 +252,28 @@
       .hero h1 {
         font-size: 1.8em;
       }
+
       .blog-post {
         border-radius: 14px;
       }
-      .post-header, .post-body {
+
+      .post-header,
+      .post-body {
         padding-left: 20px;
         padding-right: 20px;
       }
+
       .transcript {
         padding: 16px;
       }
+
       .info-section {
         padding: 20px;
       }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ── Hero Section ── -->
@@ -276,7 +301,7 @@
       </div>
 
       <div class="post-body">
-        <p>Trong tập podcast hôm nay, chúng ta sẽ học cách giới thiệu bản thân bằng tiếng Nhật. 
+        <p>Trong tập podcast hôm nay, chúng ta sẽ học cách giới thiệu bản thân bằng tiếng Nhật.
           Dưới đây là transcript đầy đủ với furigana tự động:</p>
 
         <!-- ═══════════════════════════════════════════════════
@@ -285,28 +310,87 @@
              ═══════════════════════════════════════════════════ -->
         <section class="transcript">
           <h2 id="script">📄 トランスクリプト / Transcript</h2>
-
-          <!-- Controls & Loading sẽ được chèn tự động vào đây -->
-
           <div class="transcript-content">
             <p class="zh">春樹: 皆さん、こんにちは。春樹です。</p>
             <p class="zh">結衣: こんにちは！結衣です。</p>
-            <p class="zh">春樹: 今日は「自己紹介」について話しましょう。</p>
-            <p class="zh">結衣: いいですね！日本語の自己紹介は大切ですよね。</p>
-            <p class="zh">春樹: まず、基本的な表現から始めましょう。</p>
-            <p class="zh">結衣: はい。「はじめまして」は一番大事な挨拶ですね。</p>
-            <p class="zh">春樹: そうですね。次に名前を言います。「私の名前は春樹です。」</p>
-            <p class="zh">結衣: 「私は結衣と申します。」もう少し丁寧な言い方ですね。</p>
-            <p class="zh">春樹: 出身地も紹介しましょう。「東京から来ました。」</p>
-            <p class="zh">結衣: 「大阪出身です。」短い言い方もありますよ。</p>
-            <p class="zh">春樹: 趣味についても話せると良いですね。</p>
-            <p class="zh">結衣: 「趣味は音楽を聴くことです。」</p>
-            <p class="zh">春樹: 「私は読書が好きです。」</p>
-            <p class="zh">結衣: 仕事の紹介も大切です。「会社員です。」</p>
-            <p class="zh">春樹: 「学生です。大学で日本語を勉強しています。」</p>
-            <p class="zh">結衣: 最後に「よろしくお願いします」で締めくくりましょう。</p>
-            <p class="zh">春樹: 皆さんも練習してみてくださいね！</p>
-            <p class="zh">結衣: それでは、また来週！さようなら！</p>
+            <p class="zh">春樹: 「日本語デイリーポッドキャスト」へようこそ。この番組では、教科書だけでは学べない、自然な日本語の会話をお届けしています。</p>
+            <p class="zh">結衣: はい！色々なテーマについて私たち二人が楽しくおしゃべりします。リスナーの皆さんが、リスニング力を上げたり、新しい言葉を覚えたりするお手伝いができたら嬉しいです。</p>
+            <p class="zh">春樹: 教科書の日本語も大切ですが、普通の日本人が毎日どんなふうに話しているかを聞くのも、とても勉強になりますよね。</p>
+            <p class="zh">結衣: そうですね。リラックスして、友達の話を聞くような気持ちで聞いてくださいね。さて、春樹さん、今日のテーマは何ですか？</p>
+            <p class="zh">春樹: 今日のテーマは、「日本の懐かしい夏の夜」です。</p>
+            <p class="zh">結衣: わあ、「日本の懐かしい夏の夜」！いいテーマですね。夏といえば、やっぱり夜が特別ですよね。</p>
+            <p class="zh">春樹: ええ。日本の夏はとても暑いですが、夜になると少し涼しくなって、独特の雰囲気があります。今日は、私たちが子供の頃に体験した夏の夜の思い出や、日本の夏の文化について話していきましょう。
+            </p>
+            <p class="zh">結衣: はい、楽しみです！皆さん、今日も最後までよろしくお願いします。</p>
+            <p class="zh">春樹: 結衣さんは、「夏の夜」と聞いて、一番最初に何を思い出しますか？</p>
+            <p class="zh">結衣: 私は絶対に「夏祭り」です！もう、夏の夜といえばお祭りですよ。</p>
+            <p class="zh">春樹: なるほど。結衣さんらしいですね。とても元気なイメージです。</p>
+            <p class="zh">結衣: はい！子供の頃は、浴衣を着て、友達や家族と一緒に近くの神社のお祭りに行くのが本当に楽しみでした。</p>
+            <p class="zh">春樹: 浴衣、いいですね。お祭りでは何をよくしていましたか？</p>
+            <p class="zh">結衣: やっぱり「屋台」ですね。屋台がたくさん並んでいるのを見ると、すごくワクワクしました。</p>
+            <p class="zh">春樹: うんうん、屋台ですね。屋台は、お祭りの時に出る小さなお店のことですよね。どんな屋台が好きでしたか？</p>
+            <p class="zh">結衣: たこ焼きとか、焼きそばとか……。あ、あと「りんご飴」です！甘くてカリカリしていて、見た目も可愛くて大好きでした。</p>
+            <p class="zh">春樹: 食べ物ばかりですね（笑）。</p>
+            <p class="zh">結衣: あはは、そうですね。もちろん、金魚すくいなどのゲームもしましたよ。お祭りのにぎやかな音楽と、美味しい匂い。それが私の「懐かしい」夏の夜です。春樹さんはどうですか？</p>
+            <p class="zh">春樹: 私は結衣さんとは少し違いますね。私は、もっと静かな夏の夜が懐かしいです。</p>
+            <p class="zh">結衣: へえ、静かな夏の夜ですか。例えばどんなことですか？</p>
+            <p class="zh">春樹: 祖母の家に遊びに行った時のことです。日本の古い家には「縁側」という、庭に面した木の廊下みたいな場所があるんです。</p>
+            <p class="zh">結衣: うんうん、アニメとかでもよく見ます。家の外と中の中間みたいな場所ですよね。</p>
+            <p class="zh">春樹: そうです。夜、その縁側に座って、家族みんなでスイカを食べたのがすごく懐かしい思い出です。</p>
+            <p class="zh">結衣: わあ、縁側でスイカ！まさに日本の夏ですね。</p>
+            <p class="zh">春樹: ええ。冷たいスイカを食べながら、庭で鳴いている虫の声を聞くんです。「リンリン」という鈴虫の音を聞くと、とてもリラックスできました。</p>
+            <p class="zh">結衣: 確かに、虫の声を聞くと落ち着きますよね。あ、そういえば、スイカに塩をかけますか？</p>
+            <p class="zh">春樹: かけますよ。少しだけ塩をかけると、スイカがもっと甘く感じますからね。</p>
+            <p class="zh">結衣: へえ！私はそのまま食べるのが好きですけど、今度塩をかけてみます。お祭りのにぎやかな夜もいいですが、春樹さんのような静かな夏の夜も素敵ですね。</p>
+            <p class="zh">春樹: 昔はエアコンがなかったので、そうやって縁側で「夕涼み」をするのが普通の生活だったんですよね。</p>
+            <p class="zh">結衣: あ、春樹さん、ちょっと質問してもいいですか？</p>
+            <p class="zh">春樹: はい、何でしょう？</p>
+            <p class="zh">結衣: リスナーの皆さんも疑問に思うかもしれないんですが……「夕涼み」って言葉、小説やニュースでよく聞きますけど、具体的にどういうことなんですか？ただ涼しいところに座るだけですか？</p>
+            <p class="zh">春樹: とてもいい質問ですね。「夕涼み」の「夕」は夕方のことです。「涼み」は、涼しくなるようにすることです。</p>
+            <p class="zh">結衣: なるほど。夕方に涼むから「夕涼み」なんですね。</p>
+            <p class="zh">春樹: そうです。夏の昼間はとても暑いですよね。でも、夕方から夜になると、少し涼しい風が吹いてきます。その時に、家の外や縁側に出て、風を感じながらリラックスすることを「夕涼み」と言います。
+            </p>
+            <p class="zh">結衣: へえ、特別なことをしなくてもいいんですか？</p>
+            <p class="zh">春樹: ええ。冷たいお茶を飲んだり、団扇であおいだり、ただおしゃべりをしたり。日本の伝統的な夏の楽しみ方です。</p>
+            <p class="zh">結衣: わあ、なんだかすごく風流ですね。リラックスできそうです。</p>
+            <p class="zh">春樹: そうですね。それから、夕涼みをもっと涼しくするために「打ち水」ということもよくします。</p>
+            <p class="zh">結衣: 打ち水？水を打つんですか？</p>
+            <p class="zh">春樹: ええ。家の前の道や庭に、ひしゃくで水をまくんです。水が蒸発する時に熱を奪うので、本当に少し涼しくなるんですよ。</p>
+            <p class="zh">結衣: 昔の人の知恵ですね！エアコンがない時代でも、そうやって夏の夜を快適に過ごす工夫をしていたんですね。勉強になります。私も今年の夏は「夕涼み」をやってみたいです。</p>
+            <p class="zh">春樹: ぜひやってみてください。ところで、夏の夜って、他の季節とは違う独特の「音」と「匂い」もありますよね。</p>
+            <p class="zh">結衣: 確かにそうですね。私にとって、懐かしい夏の夜の匂いは、やっぱり「蚊取り線香」の匂いです。</p>
+            <p class="zh">春樹: ああ、蚊取り線香。いいですね。</p>
+            <p class="zh">結衣: リスナーの皆さんの中には見たことがない人もいるかもしれませんが、蚊を退治するための、緑色で、ぐるぐる巻いてあるお香のようなものです。</p>
+            <p class="zh">春樹: そうですね。火をつけると煙が出て、独特の匂いがします。最近は電気のタイプやスプレーのタイプが多いですが、昔ながらの蚊取り線香の匂いをかぐと、「ああ、夏だな」と感じますよね。</p>
+            <p class="zh">結衣: そうなんです！おばあちゃんの家に行くと必ずその匂いがして、とても懐かしい気持ちになります。春樹さんは、懐かしい夏の「音」はありますか？</p>
+            <p class="zh">春樹: 私は「風鈴」の音ですね。</p>
+            <p class="zh">結衣: 風鈴、チリンチリンって鳴るガラスや金属の飾りのことですよね。</p>
+            <p class="zh">春樹: ええ。窓の近くに吊るしておくと、風が吹いた時にとても綺麗な音が鳴ります。その音を聞くだけで、不思議と涼しく感じるんです。</p>
+            <p class="zh">結衣: 日本の夏の風物詩ですね。あと、夏の夜の音といえば、やっぱり「花火」の音じゃないですか？ドーン！っていう大きな音。</p>
+            <p class="zh">春樹: うんうん、花火大会の音ですね。お腹の底まで響くような大きな音です。結衣さんは花火大会によく行きましたか？</p>
+            <p class="zh">結衣: はい！大きな花火を見るのも好きですが、私は家の下でやる「手持ち花火」も好きです。</p>
+            <p class="zh">春樹: いいですね。小さな花火を家族や友達と一緒にやるのも、夏の夜の楽しい思い出です。特に最後に「線香花火」をやるのが定番ですよね。</p>
+            <p class="zh">結衣:
+              そうそう！一番小さくて、静かな花火です。パチパチと小さく光って、最後にポトッと落ちてしまう……。あれを見ると、「あ、お祭りが終わっちゃう」「夏が終わっちゃう」って、少し寂しいような、懐かしいような気持ちになります。
+            </p>
+            <p class="zh">春樹:
+              楽しかった夏の夜が終わる寂しさですね。にぎやかなお祭り、屋台の美味しい食べ物、冷たいスイカ、そして静かな風鈴の音。すべてが合わさって、日本の「懐かしい夏の夜」ができているんだと思います。</p>
+            <p class="zh">結衣: さて、あっという間に時間が来てしまいました。今日は「日本の懐かしい夏の夜」について、お祭りの思い出や静かな夕涼みなど、色々な話をしましたね。</p>
+            <p class="zh">春樹:
+              そうですね。それでは、今日のエピソードから、「今日のベストフレーズ３選」を発表します。一つ目は、「懐かしい」。昔のことを思い出して、心が温かくなる気持ちを表す言葉です。二つ目は、「屋台」。お祭りの時に出る、食べ物やゲームの小さなお店のことです。三つ目は、「夕涼み」。夏の夕方から夜にかけて、涼しい風にあたってリラックスすることです。
+            </p>
+            <p class="zh">結衣: どれも日本の夏を話す時にとても便利な言葉ですね。</p>
+            <p class="zh">春樹:
+              ええ。リスナーの皆さんも、ぜひ使ってみてください。そして、もしこのエピソードが役に立った、面白いと思ったら、ぜひ「いいね」とチャンネル登録、それからお友達へのシェアをお願いします。とても励みになります！</p>
+            <p class="zh">結衣: 今日のスクリプトや紹介したフレーズはすべてブログにのせていますので、漢字の読み方や意味をゆっくり復習したい方は、ぜひ
+              japanesedailypodcast.blogspot.com をチェックしてくださいね！</p>
+            <p class="zh">春樹: ぜひブログも活用して、日本語の勉強に役立ててください。</p>
+            <p class="zh">結衣: 最後に、リスナーの皆さんへの質問です！みなさんの国の「夏の夜」はどんな感じですか？日本のようなお祭りがありますか？それとも、涼しくて静かですか？ぜひ、コメント欄で教えてくださいね！
+            </p>
+            <p class="zh">春樹: 皆さんのコメント、お待ちしています。それでは、今日のポッドキャストはここまでです。</p>
+            <p class="zh">結衣: 最後まで聞いてくださって、ありがとうございました！</p>
+            <p class="zh">春樹: また次回お会いしましょう。さようなら。</p>
+            <p class="zh">結衣: さようならー！バイバーイ！</p>
           </div>
         </section>
       </div>
@@ -316,11 +400,12 @@
     <div class="info-section">
       <h3>🔧 Cách nhúng vào Blogger</h3>
       <p style="color: rgba(255,255,255,0.6); margin-bottom: 12px;">
-        Thêm đoạn code sau vào phần <code style="color: #e74c8b;">&lt;head&gt;</code> hoặc cuối <code style="color: #e74c8b;">&lt;body&gt;</code> trong template Blogger:
+        Thêm đoạn code sau vào phần <code style="color: #e74c8b;">&lt;head&gt;</code> hoặc cuối <code
+          style="color: #e74c8b;">&lt;body&gt;</code> trong template Blogger:
       </p>
 
       <div class="code-block">
-<code><span class="cmt">&lt;!-- Furigana for Blogger - CSS --&gt;</span>
+        <code><span class="cmt">&lt;!-- Furigana for Blogger - CSS --&gt;</span>
 <span class="tag">&lt;link</span> <span class="attr">rel=</span><span class="str">"stylesheet"</span>
       <span class="attr">href=</span><span class="str">"furigana-blogger.css"</span> <span class="attr">/</span><span class="tag">&gt;</span>
 
@@ -338,7 +423,7 @@
       </p>
 
       <div class="code-block">
-<code><span class="cmt">// Cách 1: Tắt auto-init, gọi thủ công</span>
+        <code><span class="cmt">// Cách 1: Tắt auto-init, gọi thủ công</span>
 FuriganaBlogger.init({
   <span class="attr">selector</span>: <span class="str">'.transcript-content p.zh'</span>,
   <span class="attr">showToggle</span>: <span class="str">true</span>,
@@ -358,7 +443,8 @@ FuriganaBlogger.reprocess();</code>
 
   <!-- ── Footer ── -->
   <div class="footer">
-    <p>Furigana for Blogger v1.0.0 — Dựa trên <a href="https://github.com/remisimaer/furigana4subtitles">furigana4subtitles</a></p>
+    <p>Furigana for Blogger v1.0.0 — Dựa trên <a
+        href="https://github.com/remisimaer/furigana4subtitles">furigana4subtitles</a></p>
     <p style="margin-top: 8px;">Made with ♥ for Japanese learners</p>
   </div>
 
@@ -370,10 +456,12 @@ FuriganaBlogger.reprocess();</code>
   <script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
 
   <!-- 2. Kuromoji Analyzer cho Kuroshiro -->
-  <script src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
 
   <!-- 3. Furigana Blogger JS (auto-init) -->
   <script src="furigana-blogger.js"></script>
 
 </body>
+
 </html>

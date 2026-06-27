@@ -220,6 +220,38 @@
   }
 
   /**
+   * Khắc phục xung đột prototype (như Prototype.js, MooTools trên Blogger)
+   * Các thư viện này thêm các thuộc tính enumerable vào Array.prototype hoặc Object.prototype.
+   * Khiến các thư viện giải nén từ điển (như zlib.js của Kuromoji) bị lặp vô hạn hoặc crash.
+   */
+  function makePrototypesSafe() {
+    try {
+      const targets = [Object.prototype, Array.prototype, String.prototype];
+      for (let i = 0; i < targets.length; i++) {
+        const proto = targets[i];
+        const properties = Object.getOwnPropertyNames(proto);
+        for (let j = 0; j < properties.length; j++) {
+          const prop = properties[j];
+          // Tránh đụng vào các thuộc tính chuẩn
+          if (prop === 'constructor' || prop === 'prototype') continue;
+          
+          try {
+            const desc = Object.getOwnPropertyDescriptor(proto, prop);
+            if (desc && desc.enumerable && desc.configurable) {
+              Object.defineProperty(proto, prop, { enumerable: false });
+              console.log(`[Furigana] Đã ẩn thuộc tính prototype gây xung đột: ${prop}`);
+            }
+          } catch (e) {
+            // Bỏ qua lỗi nếu thuộc tính read-only hoặc sealed
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[Furigana] Không thể dọn dẹp prototypes:', err);
+    }
+  }
+
+  /**
    * Tải và khởi tạo Kuroshiro + Kuromoji Analyzer
    */
   async function initKuroshiro() {
@@ -245,6 +277,9 @@
     if (!AnalyzerClass) {
       throw new Error('Không tìm thấy KuromojiAnalyzer constructor. Kiểm tra lại phiên bản CDN.');
     }
+
+    // Dọn dẹp prototype pollution trước khi khởi chạy bộ giải nén từ điển
+    makePrototypesSafe();
 
     updateLoadingText('Đang khởi tạo bộ phân tích hình thái...');
 
