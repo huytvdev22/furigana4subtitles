@@ -1,0 +1,322 @@
+/* ============================================================
+ * Furigana for Blogger — CSS
+ * Thư viện CSS styling cho hiển thị furigana (ふりがな) trên blog
+ * Dựa trên dự án furigana4subtitles
+ * ============================================================ */
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+/* ── CSS Custom Properties ── */
+:root {
+  --furigana-font: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'メイリオ', sans-serif;
+  --furigana-color: #e74c8b;
+  --furigana-size: 0.5em;
+  --furigana-opacity: 1;
+  --furigana-base-color: #2d2d2d;
+  --furigana-base-size: 1.15em;
+  --furigana-line-height: 2.2;
+
+  /* Toggle button */
+  --toggle-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --toggle-bg-off: linear-gradient(135deg, #a8a8a8 0%, #888888 100%);
+  --toggle-text: #ffffff;
+  --toggle-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  --toggle-radius: 50px;
+
+  /* Loading */
+  --loading-color: #667eea;
+  --loading-bg: rgba(102, 126, 234, 0.08);
+}
+
+/* ── Transcript container ── */
+.transcript-content {
+  font-family: var(--furigana-font);
+  line-height: var(--furigana-line-height);
+}
+
+.transcript-content p.zh {
+  font-family: var(--furigana-font);
+  font-size: var(--furigana-base-size);
+  color: var(--furigana-base-color);
+  line-height: var(--furigana-line-height);
+  margin: 0.6em 0;
+  padding: 0.4em 0.6em;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.transcript-content p.zh:hover {
+  background-color: rgba(102, 126, 234, 0.04);
+}
+
+/* ── Ruby / Furigana Styling ── */
+.transcript-content ruby {
+  ruby-position: over;
+  ruby-align: center;
+}
+
+.transcript-content ruby rt {
+  font-size: var(--furigana-size);
+  color: var(--furigana-color);
+  font-weight: 400;
+  opacity: var(--furigana-opacity);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              color 0.3s ease;
+  /* Ngăn furigana quá rộng gây dịch chuyển base text */
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+/* Hiệu ứng hover: highlight furigana khi di chuột vào kanji */
+.transcript-content ruby:hover rt {
+  color: #d63384;
+  opacity: 1 !important;
+}
+
+/* ── Furigana Toggle States ── */
+
+/* Khi furigana bị ẩn */
+.furigana-hidden .transcript-content ruby rt {
+  opacity: 0;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, font-size 0.3s ease;
+}
+
+/* Khi furigana hiện */
+.furigana-visible .transcript-content ruby rt {
+  opacity: var(--furigana-opacity);
+  transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* ── Animation: Furigana xuất hiện lần đầu ── */
+@keyframes furiganaFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: var(--furigana-opacity);
+    transform: translateY(0);
+  }
+}
+
+.furigana-animate .transcript-content ruby rt {
+  animation: furiganaFadeIn 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+/* Stagger animation cho từng ruby element */
+.furigana-animate .transcript-content p.zh:nth-child(1) ruby rt { animation-delay: 0.05s; }
+.furigana-animate .transcript-content p.zh:nth-child(2) ruby rt { animation-delay: 0.1s; }
+.furigana-animate .transcript-content p.zh:nth-child(3) ruby rt { animation-delay: 0.15s; }
+.furigana-animate .transcript-content p.zh:nth-child(4) ruby rt { animation-delay: 0.2s; }
+.furigana-animate .transcript-content p.zh:nth-child(5) ruby rt { animation-delay: 0.25s; }
+.furigana-animate .transcript-content p.zh:nth-child(6) ruby rt { animation-delay: 0.3s; }
+.furigana-animate .transcript-content p.zh:nth-child(7) ruby rt { animation-delay: 0.35s; }
+.furigana-animate .transcript-content p.zh:nth-child(8) ruby rt { animation-delay: 0.4s; }
+.furigana-animate .transcript-content p.zh:nth-child(n+9) ruby rt { animation-delay: 0.45s; }
+
+/* ── Toggle Button ── */
+.furigana-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.furigana-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--toggle-radius);
+  background: var(--toggle-bg);
+  color: var(--toggle-text);
+  font-family: var(--furigana-font);
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--toggle-shadow);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+}
+
+.furigana-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.furigana-toggle-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.furigana-toggle-btn[data-state="off"] {
+  background: var(--toggle-bg-off);
+  box-shadow: 0 4px 15px rgba(136, 136, 136, 0.3);
+}
+
+.furigana-toggle-btn[data-state="off"]:hover {
+  box-shadow: 0 6px 20px rgba(136, 136, 136, 0.4);
+}
+
+/* Toggle icon */
+.furigana-toggle-icon {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+/* ── Loading Indicator ── */
+.furigana-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  margin: 16px 0;
+  border-radius: 12px;
+  background: var(--loading-bg);
+  font-family: var(--furigana-font);
+  font-size: 0.9em;
+  color: #555;
+  border: 1px solid rgba(102, 126, 234, 0.12);
+}
+
+.furigana-loading-hidden {
+  display: none;
+}
+
+/* Spinner animation */
+.furigana-spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(102, 126, 234, 0.2);
+  border-top-color: var(--loading-color);
+  border-radius: 50%;
+  animation: furiganaSpin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes furiganaSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Loading progress text */
+.furigana-loading-text {
+  flex: 1;
+}
+
+.furigana-loading-text strong {
+  color: var(--loading-color);
+}
+
+/* ── Status Badge ── */
+.furigana-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78em;
+  font-family: var(--furigana-font);
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.furigana-status.visible {
+  opacity: 1;
+}
+
+.furigana-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #28a745;
+}
+
+/* ── Error State ── */
+.furigana-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  margin: 16px 0;
+  border-radius: 10px;
+  background: rgba(220, 53, 69, 0.08);
+  border: 1px solid rgba(220, 53, 69, 0.15);
+  color: #dc3545;
+  font-family: var(--furigana-font);
+  font-size: 0.88em;
+}
+
+.furigana-error-icon {
+  font-size: 1.3em;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root {
+    --furigana-base-size: 1.05em;
+    --furigana-size: 0.48em;
+    --furigana-line-height: 2;
+  }
+
+  .transcript-content p.zh {
+    padding: 0.3em 0.4em;
+    margin: 0.4em 0;
+  }
+
+  .furigana-toggle-btn {
+    padding: 8px 18px;
+    font-size: 0.85em;
+  }
+
+  .furigana-loading {
+    padding: 10px 14px;
+    font-size: 0.85em;
+  }
+
+  .furigana-controls {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --furigana-base-size: 1em;
+    --furigana-size: 0.45em;
+    --furigana-line-height: 1.9;
+  }
+
+  .furigana-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .furigana-toggle-btn {
+    justify-content: center;
+  }
+}
+
+/* ── Print Styles ── */
+@media print {
+  .furigana-controls,
+  .furigana-loading,
+  .furigana-status {
+    display: none !important;
+  }
+
+  .transcript-content ruby rt {
+    opacity: 1 !important;
+    color: #333 !important;
+  }
+}

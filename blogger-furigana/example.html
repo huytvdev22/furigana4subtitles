@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Furigana for Blogger — Demo</title>
+  <meta name="description" content="Demo thư viện tự động thêm furigana cho text tiếng Nhật trên Blogger">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Furigana Blogger CSS -->
+  <link rel="stylesheet" href="furigana-blogger.css">
+
+  <!-- Page Styles (mô phỏng giao diện blog) -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    /* ── Hero Header ── */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      padding: 60px 20px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 50%, rgba(118, 75, 162, 0.06) 0%, transparent 50%);
+      animation: heroGlow 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(5deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #e74c8b, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      font-size: 1.1em;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.6;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(102, 126, 234, 0.15);
+      border: 1px solid rgba(102, 126, 234, 0.25);
+      color: #667eea;
+      font-size: 0.85em;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    /* ── Main Container ── */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Blog Post Card ── */
+    .blog-post {
+      background: linear-gradient(145deg, #1e1e32, #1a1a2e);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .post-header {
+      padding: 32px 32px 0;
+    }
+
+    .post-header h2 {
+      font-size: 1.6em;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .post-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .post-body {
+      padding: 0 32px 32px;
+    }
+
+    .post-body > p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    /* ── Transcript Section (cấu trúc tương tự Blogger) ── */
+    .transcript {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 24px;
+      margin-top: 20px;
+    }
+
+    .transcript h2 {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Override furigana colors cho dark theme */
+    .transcript .transcript-content p.zh {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .transcript .transcript-content p.zh:hover {
+      background-color: rgba(102, 126, 234, 0.08);
+    }
+
+    /* ── Section Info ── */
+    .info-section {
+      margin-top: 40px;
+      background: linear-gradient(145deg, #1e1e32, #1a1a2e);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 32px;
+    }
+
+    .info-section h3 {
+      font-size: 1.2em;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .code-block {
+      background: #0d0d1a;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      overflow-x: auto;
+      margin: 12px 0 24px;
+    }
+
+    .code-block code {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.85em;
+      color: #a8d8ea;
+      line-height: 1.7;
+      white-space: pre;
+    }
+
+    .code-block .tag { color: #e74c8b; }
+    .code-block .attr { color: #ffd166; }
+    .code-block .str { color: #a8d8ea; }
+    .code-block .cmt { color: rgba(255,255,255,0.3); }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.85em;
+    }
+
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.8em;
+      }
+      .blog-post {
+        border-radius: 14px;
+      }
+      .post-header, .post-body {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .transcript {
+        padding: 16px;
+      }
+      .info-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Hero Section ── -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">📦 v1.0.0</div>
+      <h1>ふりがな for Blogger</h1>
+      <p>Tự động thêm furigana (ふりがな) cho chữ Kanji trong bài viết blog.<br>
+        Dựa trên dự án <strong>furigana4subtitles</strong>.</p>
+    </div>
+  </div>
+
+  <!-- ── Main Content ── -->
+  <div class="container">
+
+    <!-- Blog Post Simulation -->
+    <article class="blog-post">
+      <div class="post-header">
+        <h2>🎧 Podcast #12: Giới thiệu bản thân bằng tiếng Nhật</h2>
+        <div class="post-meta">
+          <span>📅 2026-06-27</span>
+          <span>⏱️ 15 phút</span>
+          <span>🏷️ N5 Level</span>
+        </div>
+      </div>
+
+      <div class="post-body">
+        <p>Trong tập podcast hôm nay, chúng ta sẽ học cách giới thiệu bản thân bằng tiếng Nhật. 
+          Dưới đây là transcript đầy đủ với furigana tự động:</p>
+
+        <!-- ═══════════════════════════════════════════════════
+             ĐÂY LÀ CẤU TRÚC TƯƠNG TỰ NHƯ TRÊN BLOGGER CỦA BẠN
+             Thư viện sẽ tự động quét và thêm furigana cho các <p class="zh">
+             ═══════════════════════════════════════════════════ -->
+        <section class="transcript">
+          <h2 id="script">📄 トランスクリプト / Transcript</h2>
+
+          <!-- Controls & Loading sẽ được chèn tự động vào đây -->
+
+          <div class="transcript-content">
+            <p class="zh">春樹: 皆さん、こんにちは。春樹です。</p>
+            <p class="zh">結衣: こんにちは！結衣です。</p>
+            <p class="zh">春樹: 今日は「自己紹介」について話しましょう。</p>
+            <p class="zh">結衣: いいですね！日本語の自己紹介は大切ですよね。</p>
+            <p class="zh">春樹: まず、基本的な表現から始めましょう。</p>
+            <p class="zh">結衣: はい。「はじめまして」は一番大事な挨拶ですね。</p>
+            <p class="zh">春樹: そうですね。次に名前を言います。「私の名前は春樹です。」</p>
+            <p class="zh">結衣: 「私は結衣と申します。」もう少し丁寧な言い方ですね。</p>
+            <p class="zh">春樹: 出身地も紹介しましょう。「東京から来ました。」</p>
+            <p class="zh">結衣: 「大阪出身です。」短い言い方もありますよ。</p>
+            <p class="zh">春樹: 趣味についても話せると良いですね。</p>
+            <p class="zh">結衣: 「趣味は音楽を聴くことです。」</p>
+            <p class="zh">春樹: 「私は読書が好きです。」</p>
+            <p class="zh">結衣: 仕事の紹介も大切です。「会社員です。」</p>
+            <p class="zh">春樹: 「学生です。大学で日本語を勉強しています。」</p>
+            <p class="zh">結衣: 最後に「よろしくお願いします」で締めくくりましょう。</p>
+            <p class="zh">春樹: 皆さんも練習してみてくださいね！</p>
+            <p class="zh">結衣: それでは、また来週！さようなら！</p>
+          </div>
+        </section>
+      </div>
+    </article>
+
+    <!-- ── Hướng dẫn nhúng ── -->
+    <div class="info-section">
+      <h3>🔧 Cách nhúng vào Blogger</h3>
+      <p style="color: rgba(255,255,255,0.6); margin-bottom: 12px;">
+        Thêm đoạn code sau vào phần <code style="color: #e74c8b;">&lt;head&gt;</code> hoặc cuối <code style="color: #e74c8b;">&lt;body&gt;</code> trong template Blogger:
+      </p>
+
+      <div class="code-block">
+<code><span class="cmt">&lt;!-- Furigana for Blogger - CSS --&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel=</span><span class="str">"stylesheet"</span>
+      <span class="attr">href=</span><span class="str">"furigana-blogger.css"</span><span class="tag">&gt;</span>
+
+<span class="cmt">&lt;!-- Dependencies (Kuroshiro + Kuromoji) --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src=</span><span class="str">"https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src=</span><span class="str">"https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- Furigana for Blogger - JS --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src=</span><span class="str">"furigana-blogger.js"</span><span class="tag">&gt;&lt;/script&gt;</span></code>
+      </div>
+
+      <h3>⚙️ Tùy chỉnh cấu hình</h3>
+      <p style="color: rgba(255,255,255,0.6); margin-bottom: 12px;">
+        Thêm thuộc tính <code style="color: #e74c8b;">data-furigana-config</code> vào script tag, hoặc gọi API:
+      </p>
+
+      <div class="code-block">
+<code><span class="cmt">// Cách 1: Tắt auto-init, gọi thủ công</span>
+FuriganaBlogger.init({
+  <span class="attr">selector</span>: <span class="str">'.transcript-content p.zh'</span>,
+  <span class="attr">showToggle</span>: <span class="str">true</span>,
+  <span class="attr">showLoading</span>: <span class="str">true</span>,
+  <span class="attr">animateOnLoad</span>: <span class="str">true</span>,
+});
+
+<span class="cmt">// Cách 2: Bật/tắt furigana</span>
+FuriganaBlogger.toggle();
+
+<span class="cmt">// Cách 3: Xử lý lại khi DOM thay đổi</span>
+FuriganaBlogger.reprocess();</code>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    <p>Furigana for Blogger v1.0.0 — Dựa trên <a href="https://github.com/remisimaer/furigana4subtitles">furigana4subtitles</a></p>
+    <p style="margin-top: 8px;">Made with ♥ for Japanese learners</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       SCRIPTS: Tải theo đúng thứ tự
+       ═══════════════════════════════════════════════════ -->
+
+  <!-- 1. Kuroshiro Core -->
+  <script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
+
+  <!-- 2. Kuromoji Analyzer cho Kuroshiro -->
+  <script src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
+
+  <!-- 3. Furigana Blogger JS (auto-init) -->
+  <script src="furigana-blogger.js"></script>
+
+</body>
+</html>
