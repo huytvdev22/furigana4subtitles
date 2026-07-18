@@ -85,9 +85,13 @@ Nếu tệp phụ đề `.srt` của bạn đã được soạn sẵn cách đ�
   ```bash
   USE_BRACKETS=1 ./furigana4subtitles subtitle.srt
   ```
-* **Sử dụng Docker:**
+* **Sử dụng Docker (Chỉ sinh phụ đề .ass):**
   ```bash
   docker run --rm -e USE_BRACKETS=1 -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt
+  ```
+* **Sử dụng Docker (Sinh phụ đề và gắn cứng (burn-in) vào video):**
+  ```bash
+  docker run --rm -e USE_BRACKETS=1 -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 Khi bật chế độ này, chương trình sẽ tự động bóc tách các cặp ngoặc vuông, trả lại phụ đề chữ sạch và căn chỉnh chính xác Furigana trên đầu các chữ Kanji tương ứng.
 
