@@ -95,6 +95,39 @@ Nếu tệp phụ đề `.srt` của bạn đã được soạn sẵn cách đ�
   ```
 Khi bật chế độ này, chương trình sẽ tự động bóc tách các cặp ngoặc vuông, trả lại phụ đề chữ sạch và căn chỉnh chính xác Furigana trên đầu các chữ Kanji tương ứng.
 
+> 💡 **Khuyên dùng (Highly Recommended):** Nên ưu tiên sử dụng chế độ này kết hợp với mô hình AI (ChatGPT, Claude, Gemini...) để xử lý trước tệp `.srt`. Vì AI hiểu rõ ngữ cảnh của cuộc hội thoại, độ chính xác của cách đọc Furigana do AI tạo ra sẽ cao hơn nhiều so với việc phân tích tự động bằng thư viện từ điển MeCab.
+>
+> Bạn có thể sử dụng Prompt dưới đây để yêu cầu AI gán Furigana cho tệp `.srt`:
+>
+> ```markdown
+> Bạn là một trợ lý AI chuyên về ngôn ngữ tiếng Nhật và dịch thuật phụ đề. 
+> 
+> Tôi sẽ cung cấp cho bạn một nội dung tệp phụ đề định dạng `.srt` tiếng Nhật. Nhiệm vụ của bạn là thêm cách đọc Hiragana (Furigana) cho tất cả các chữ Kanji xuất hiện trong phần văn bản phụ đề, theo đúng các quy tắc nghiêm ngặt dưới đây:
+> 
+> ### ⚠️ QUY TẮC BẮT BUỘC KHI ĐẶT NGOẶC VUÔNG FURIGANA:
+> 1. Đặt cách đọc Hiragana trong cặp ngoặc vuông `[...]` ngay sau (các) ký tự Kanji được chú thích.
+> 2. Dấu ngoặc vuông PHẢI đứng NGAY SAU ký tự Kanji cuối cùng của từ đó. KHÔNG được đặt sau ký tự Kana (Hiragana/Katakana) đi kèm (Okurigana).
+>    - Đúng: 食[た]べた (Chữ "食" là Kanji nên ngoặc vuông đặt ngay sau nó).
+>    - Sai: 食べた[た] (Đặt sau chữ "べ" là Hiragana là SAI, chương trình sẽ không hiểu).
+>    - Đúng: 新[あたら]しい (Ngoặc vuông đặt ngay sau Kanji "新").
+>    - Sai: 新しい[あたら] (Đặt sau chữ "し" hoặc "い" là SAI).
+> 3. Đối với các cụm Kanji liền nhau (danh từ ghép), có thể gom chung một ngoặc vuông cho cả cụm:
+>    - Đúng: 日本語[にほんご]
+>    - Đúng: 映画館[えいがかん]
+> 4. Đối với các từ có Kanji xen kẽ Kana, hãy đặt ngoặc vuông tương ứng cho từng chữ Kanji đơn lẻ:
+>    - Đúng: お見[み]舞[ま]い (Chữ "お" và "い" là Hiragana để bên ngoài, ngoặc vuông đặt ngay sau "見" và "舞").
+>    - Sai: お見舞い[みまい] (Đặt ở cuối từ là SAI).
+> 
+> ### 📋 YÊU CẦU VỀ ĐỊNH DẠNG:
+> - Giữ nguyên 100% cấu trúc tệp phụ đề `.srt` (Không thay đổi số thứ tự, mốc thời gian `-->` hay các thẻ định dạng HTML/phụ đề khác nếu có).
+> - Chỉ viết cách đọc bằng chữ Hiragana bên trong ngoặc vuông (Không dùng Katakana, không dùng Romaji).
+> - Không thêm bất kỳ lời giải thích nào khác ngoài tệp phụ đề kết quả.
+> 
+> 
+> **Đầu vào (Input):**
+> [Dán nội dung tệp .srt của bạn vào đây]
+> ```
+
 #### 4. Tùy chọn Font chữ khi chạy Docker (Osaka-Mono, MS Gothic, v.v.)
 Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn sử dụng các font khác (như **`MS Gothic`**):
 
