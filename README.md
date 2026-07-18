@@ -17,6 +17,7 @@ Dự án hiện tại hỗ trợ cả việc chạy biên dịch cục bộ (Nat
 * **Căn chỉnh hoàn hảo trên macOS:** Sử dụng font đơn cách mặc định **`Osaka-Mono`** giúp khắc phục hoàn toàn lỗi lệch chữ Furigana (do sai số tích lũy của font tỷ lệ).
 * **Màu sắc hiển thị tối ưu:** Màu chữ phụ đề được thiết lập là **Đen** và viền **Trắng** giúp hiển thị rõ ràng và nổi bật trên mọi cảnh phim.
 * **Kích thước chữ lớn & cân đối hơn:** Tăng 20% kích thước chữ (chữ chính 62px, furigana 31px) và dịch chuyển vị trí phụ đề lên trên (baseline Y = 800) giúp dễ đọc hơn.
+* **Hỗ trợ Furigana gắn sẵn trong ngoặc vuông:** Bật biến môi trường `USE_BRACKETS=1` để xử lý phụ đề định dạng `Kanji[Furigana]` mà không cần qua thư viện MeCab.
 * **GitHub Actions CI/CD:** Tự động build Docker image hỗ trợ Multi-platform (`linux/amd64` và `linux/arm64`) đẩy lên Docker Hub khi cập nhật code.
 
 ---
@@ -77,7 +78,20 @@ docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt 
 
 > ⚠️ **Lưu ý quan trọng khi dùng Docker:** Cả file phụ đề `.srt`, file video `.mp4` hoặc các file âm thanh đầu vào phải nằm trong cùng thư mục (hoặc thư mục con) nơi bạn chạy lệnh Terminal để Docker có thể ánh xạ đúng dữ liệu.
 
-#### 3. Tùy chọn Font chữ khi chạy Docker (Osaka-Mono, MS Gothic, v.v.)
+#### 3. Chế độ sử dụng Furigana gắn sẵn trong ngoặc vuông (Bracketed Mode)
+Nếu tệp phụ đề `.srt` của bạn đã được soạn sẵn cách đọc trong dấu ngoặc vuông dạng `Kanji[Furigana]` (Ví dụ: `漢字[かんじ]` hoặc `食[た]べた`), bạn có thể bật biến môi trường `USE_BRACKETS=1` để bỏ qua việc phân tích tự động bằng MeCab:
+
+* **Sử dụng cục bộ:**
+  ```bash
+  USE_BRACKETS=1 ./furigana4subtitles subtitle.srt
+  ```
+* **Sử dụng Docker:**
+  ```bash
+  docker run --rm -e USE_BRACKETS=1 -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt
+  ```
+Khi bật chế độ này, chương trình sẽ tự động bóc tách các cặp ngoặc vuông, trả lại phụ đề chữ sạch và căn chỉnh chính xác Furigana trên đầu các chữ Kanji tương ứng.
+
+#### 4. Tùy chọn Font chữ khi chạy Docker (Osaka-Mono, MS Gothic, v.v.)
 Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn sử dụng các font khác (như **`MS Gothic`**):
 
 1. **Chuẩn bị font:** Bỏ file font bạn muốn dùng (ví dụ: `msgothic.ttc`) vào thư mục `fonts/` ở local (không cần và không nên commit file font này lên GitHub).

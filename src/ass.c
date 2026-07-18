@@ -84,16 +84,29 @@ static void write_subtitle_line(FILE *f, const char *ts, const char *te,
 				const char *line, int y,
 				struct font_config *cfg, mecab_t *mecab)
 {
-	struct furigana_token *tokens;
+	struct furigana_token *tokens = NULL;
 	int tcount = 0;
 	int t;
+	char *clean_line = NULL;
+	const char *display_line = line;
+
+	char *use_brackets_env = getenv("USE_BRACKETS");
+	int use_brackets = (use_brackets_env && strlen(use_brackets_env) > 0);
+
+	if (use_brackets) {
+		tokens = analyze_text_with_brackets(line, &clean_line, &tcount);
+		if (clean_line) {
+			display_line = clean_line;
+		}
+	} else {
+		tokens = analyze_text_with_mecab(mecab, line, &tcount);
+	}
 
 	fprintf(f, "Dialogue: 0,%s,%s,Main,,0,0,0,,{\\pos(%.1f,%d)\\an5}%s\n",
-		ts, te, cfg->screen_w / 2.0f, y, line);
+		ts, te, cfg->screen_w / 2.0f, y, display_line);
 
-	tokens = analyze_text_with_mecab(mecab, line, &tcount);
 	if (tokens)
-		calculate_token_positions(line, tokens, tcount, cfg);
+		calculate_token_positions(display_line, tokens, tcount, cfg);
 
 	for (t = 0; t < tcount; t++) {
 		fprintf(f, "Dialogue: 1,%s,%s,Furi,,0,0,0,,"
@@ -103,6 +116,7 @@ static void write_subtitle_line(FILE *f, const char *ts, const char *te,
 		free(tokens[t].reading);
 	}
 	free(tokens);
+	free(clean_line);
 }
 
 static void process_subtitle(FILE *f, struct subtitle *subs, int count,

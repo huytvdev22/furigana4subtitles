@@ -15,6 +15,8 @@ char *katakana_to_hiragana(const char *in);
 
 struct furigana_token *analyze_text_with_mecab(mecab_t *mecab, const char *line,
 					       int *token_count);
+struct furigana_token *analyze_text_with_brackets(const char *line, char **clean_line,
+					       int *token_count);
 void calculate_token_positions(const char *line, struct furigana_token *tokens,
 			       int token_count, struct font_config *cfg);
 

@@ -325,3 +325,132 @@ void calculate_token_positions(const char *line, struct furigana_token *tokens,
 		tokens[i].x = start_x + center_char * cfg->char_width;
 	}
 }
+
+struct furigana_token *analyze_text_with_brackets(const char *line, char **clean_line,
+					       int *token_count)
+{
+	wchar_t *wline = NULL;
+	wchar_t *wclean = NULL;
+	struct furigana_token *tokens = NULL;
+	int capacity = INITIAL_TOKEN_CAPACITY;
+	size_t len, wlen, i;
+	size_t wclean_len = 0;
+	int last_assigned_index = 0;
+
+	*token_count = 0;
+	*clean_line = NULL;
+
+	if (!line)
+		return NULL;
+
+	len = strlen(line);
+	wline = malloc((len + 1) * sizeof(wchar_t));
+	wclean = malloc((len + 1) * sizeof(wchar_t));
+	if (!wline || !wclean) {
+		free(wline);
+		free(wclean);
+		return NULL;
+	}
+
+	if (mbstowcs(wline, line, len + 1) == (size_t)-1) {
+		free(wline);
+		free(wclean);
+		return NULL;
+	}
+
+	wlen = wcslen(wline);
+	tokens = malloc(capacity * sizeof(struct furigana_token));
+	if (!tokens) {
+		free(wline);
+		free(wclean);
+		return NULL;
+	}
+
+	i = 0;
+	while (i < wlen) {
+		if (wline[i] == L'[') {
+			/* Tìm dấu đóng ngoặc ']' */
+			size_t j = i + 1;
+			while (j < wlen && wline[j] != L']') {
+				j++;
+			}
+
+			if (j < wlen) {
+				/* Lấy phần nội dung Furigana giữa '[' và ']' */
+				size_t furi_wlen = j - (i + 1);
+				wchar_t *wfuri = malloc((furi_wlen + 1) * sizeof(wchar_t));
+				if (wfuri) {
+					wcsncpy(wfuri, wline + i + 1, furi_wlen);
+					wfuri[furi_wlen] = L'\0';
+
+					/* Quét ngược từ wclean_len - 1 về trước để tìm Kanji */
+					int kanji_len = 0;
+					while ((int)wclean_len - 1 - kanji_len >= last_assigned_index &&
+					       is_kanji(wclean[wclean_len - 1 - kanji_len])) {
+						kanji_len++;
+					}
+
+					if (kanji_len > 0) {
+						char *furi_utf8 = malloc(furi_wlen * 4 + 1);
+						if (furi_utf8 && wcstombs(furi_utf8, wfuri, furi_wlen * 4 + 1) != (size_t)-1) {
+							/* Tăng kích thước mảng nếu cần */
+							if (*token_count >= capacity) {
+								capacity *= 2;
+								struct furigana_token *tmp = realloc(tokens, capacity * sizeof(struct furigana_token));
+								if (!tmp) {
+									free(furi_utf8);
+									free(wfuri);
+									goto error;
+								}
+								tokens = tmp;
+							}
+
+							tokens[*token_count].reading = furi_utf8;
+							tokens[*token_count].start_char = (int)wclean_len - kanji_len;
+							tokens[*token_count].char_len = kanji_len;
+							tokens[*token_count].x = 0.0f;
+							(*token_count)++;
+
+							last_assigned_index = (int)wclean_len;
+						} else {
+							free(furi_utf8);
+						}
+					}
+					free(wfuri);
+				}
+				i = j + 1;
+			} else {
+				/* Không tìm thấy dấu đóng ngoặc, coi L'[' là ký tự bình thường */
+				wclean[wclean_len++] = wline[i++];
+			}
+		} else {
+			wclean[wclean_len++] = wline[i++];
+		}
+	}
+	wclean[wclean_len] = L'\0';
+
+	/* Chuyển wclean sang UTF-8 */
+	char *clean_utf8 = malloc(wclean_len * 4 + 1);
+	if (clean_utf8 && wcstombs(clean_utf8, wclean, wclean_len * 4 + 1) != (size_t)-1) {
+		*clean_line = clean_utf8;
+	} else {
+		free(clean_utf8);
+		goto error;
+	}
+
+	free(wline);
+	free(wclean);
+	return tokens;
+
+error:
+	if (tokens) {
+		for (int k = 0; k < *token_count; k++) {
+			free(tokens[k].reading);
+		}
+		free(tokens);
+	}
+	free(wline);
+	free(wclean);
+	*token_count = 0;
+	return NULL;
+}
