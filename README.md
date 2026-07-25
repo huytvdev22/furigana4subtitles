@@ -39,9 +39,13 @@ docker pull huy8895/furigana4subtitles:latest
 Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount) thư mục chứa video/phụ đề vào thư mục `/data` của container.
 
 #### Chế độ 1: Chỉ tạo file phụ đề `.ass` (không ghép vào video)
-* **macOS / Linux / Windows PowerShell:**
+* **macOS / Linux / Git Bash:**
   ```bash
   docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt
+  ```
+* **Windows PowerShell:**
+  ```powershell
+  docker run --rm -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt
   ```
 * **Windows CMD:**
   ```cmd
@@ -50,9 +54,13 @@ Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount)
 *(Kết quả file `subtitle.ass` sẽ được lưu cùng thư mục với file `.srt` gốc).*
 
 #### Chế độ 2: Tạo phụ đề và tự động Burn-in (Gắn cứng) vào video
-* **macOS / Linux / Windows PowerShell:**
+* **macOS / Linux / Git Bash:**
   ```bash
   docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+  ```
+* **Windows PowerShell:**
+  ```powershell
+  docker run --rm -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 * **Windows CMD:**
   ```cmd
@@ -61,18 +69,43 @@ Do Docker chạy trong môi trường cô lập, bạn cần liên kết (mount)
 *(Kết quả file video hardsub `video_furigana.mp4` sẽ được tạo ra tại thư mục hiện tại của bạn).*
 
 #### Chế độ 3: Chỉ định rõ tên file video đầu ra mong muốn
-```bash
-docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
-```
+* **macOS / Linux / Git Bash:**
+  ```bash
+  docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
+  ```
+* **Windows PowerShell:**
+  ```powershell
+  docker run --rm -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
+  ```
+* **Windows CMD:**
+  ```cmd
+  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4 /data/output_hardsub.mp4
+  ```
 
 #### Chế độ 4: Điều chỉnh tốc độ hàng loạt cho các file âm thanh trong thư mục hiện tại
-* **macOS / Linux / Windows PowerShell:**
+* **macOS / Linux / Git Bash:**
   ```bash
   docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles speed <tốc_độ> [phần_mở_rộng]
   ```
-* **Ví dụ làm chậm tất cả file `.mp3` xuống tốc độ `0.9`:**
+* **Windows PowerShell:**
+  ```powershell
+  docker run --rm -v "${PWD}":/data huy8895/furigana4subtitles speed <tốc_độ> [phần_mở_rộng]
+  ```
+* **Windows CMD:**
+  ```cmd
+  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles speed <tốc_độ> [phần_mở_rộng]
+  ```
+* **Ví dụ làm chậm tất cả file `.mp3` xuống tốc độ `0.9` (macOS/Linux/Git Bash):**
   ```bash
   docker run --rm -v "$(pwd)":/data huy8895/furigana4subtitles speed 0.9 mp3
+  ```
+* **Ví dụ làm chậm tất cả file `.mp3` xuống tốc độ `0.9` (Windows PowerShell):**
+  ```powershell
+  docker run --rm -v "${PWD}":/data huy8895/furigana4subtitles speed 0.9 mp3
+  ```
+* **Ví dụ làm chậm tất cả file `.mp3` xuống tốc độ `0.9` (Windows CMD):**
+  ```cmd
+  docker run --rm -v "%cd%":/data huy8895/furigana4subtitles speed 0.9 mp3
   ```
   *(Các file kết quả sẽ được tạo với hậu tố `_speed0.9.mp3` tại thư mục hiện tại).*
 
@@ -86,12 +119,33 @@ Nếu tệp phụ đề `.srt` của bạn đã được soạn sẵn cách đ�
   USE_BRACKETS=1 ./furigana4subtitles subtitle.srt
   ```
 * **Sử dụng Docker (Chỉ sinh phụ đề .ass):**
+
+  macOS / Linux / Git Bash:
   ```bash
   docker run --rm -e USE_BRACKETS=1 -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt
   ```
+  Windows PowerShell:
+  ```powershell
+  docker run --rm -e USE_BRACKETS=1 -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt
+  ```
+  Windows CMD:
+  ```cmd
+  docker run --rm -e USE_BRACKETS=1 -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt
+  ```
+
 * **Sử dụng Docker (Sinh phụ đề và gắn cứng (burn-in) vào video):**
+
+  macOS / Linux / Git Bash:
   ```bash
   docker run --rm -e USE_BRACKETS=1 -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+  ```
+  Windows PowerShell:
+  ```powershell
+  docker run --rm -e USE_BRACKETS=1 -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+  ```
+  Windows CMD:
+  ```cmd
+  docker run --rm -e USE_BRACKETS=1 -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
   ```
 Khi bật chế độ này, chương trình sẽ tự động bóc tách các cặp ngoặc vuông, trả lại phụ đề chữ sạch và căn chỉnh chính xác Furigana trên đầu các chữ Kanji tương ứng.
 
@@ -137,13 +191,30 @@ Mặc định, công cụ sử dụng font **`Osaka-Mono`**. Nếu bạn muốn 
    docker build -t furigana4subtitles .
    ```
 3. **Chạy Docker với biến môi trường `-e FONT_NAME`:**
-   * **Sử dụng font MS Gothic:**
+
+   * **Sử dụng font MS Gothic (macOS / Linux / Git Bash):**
      ```bash
      docker run --rm -e FONT_NAME="MS Gothic" -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
      ```
-   * **Sử dụng font Osaka-Mono:**
+   * **Sử dụng font MS Gothic (Windows PowerShell):**
+     ```powershell
+     docker run --rm -e FONT_NAME="MS Gothic" -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+   * **Sử dụng font MS Gothic (Windows CMD):**
+     ```cmd
+     docker run --rm -e FONT_NAME="MS Gothic" -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+   * **Sử dụng font Osaka-Mono (macOS / Linux / Git Bash):**
      ```bash
      docker run --rm -e FONT_NAME="Osaka-Mono" -v "$(pwd)":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+   * **Sử dụng font Osaka-Mono (Windows PowerShell):**
+     ```powershell
+     docker run --rm -e FONT_NAME="Osaka-Mono" -v "${PWD}":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
+     ```
+   * **Sử dụng font Osaka-Mono (Windows CMD):**
+     ```cmd
+     docker run --rm -e FONT_NAME="Osaka-Mono" -v "%cd%":/data huy8895/furigana4subtitles /data/subtitle.srt /data/video.mp4
      ```
 
 ---
